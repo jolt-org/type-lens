@@ -5,10 +5,12 @@ import sys
 from typing import (
     TYPE_CHECKING,
     Any,
+    Dict,
     ForwardRef,
     List,
     Literal,
     Optional,
+    Sequence,
     Tuple,
     TypedDict,
     TypeVar,
@@ -354,3 +356,12 @@ def test_safe_generic_origin(annotation: Any, expected: Any) -> None:
     if isinstance(annotation, str):
         annotation = eval(annotation)
     assert TypeView(annotation).safe_generic_origin is expected
+
+
+def test_instantiatable_origin() -> None:
+    assert TypeView(int).instantiable_origin == int
+    assert TypeView(list).instantiable_origin == list
+    assert TypeView(List[int]).instantiable_origin == list
+    assert TypeView(Dict[int, int]).instantiable_origin == dict
+    assert TypeView(Sequence[int]).instantiable_origin == list
+    assert TypeView(TypeView).instantiable_origin == TypeView
